@@ -1,2 +1,3 @@
 .vscode/settings.json
 examples/dev.jl
+examples/.ipynb_checkpoints/*
