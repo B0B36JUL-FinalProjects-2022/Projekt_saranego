@@ -3,7 +3,7 @@ export Block, BasicBlock
 abstract type Block end
 
 struct BasicBlock
-    block::Chain
+    chain::Chain
     channels::Pair{Integer, Integer}
     stride::Integer
 end
@@ -19,6 +19,6 @@ function BasicBlock(channels, stride, connection)
     BasicBlock(chain, channels, stride)
 end
 
-(bb::BasicBlock)(x) = bb.block(x)
+(bb::BasicBlock)(x) = bb.chain(x)
 
 Flux.@functor BasicBlock
