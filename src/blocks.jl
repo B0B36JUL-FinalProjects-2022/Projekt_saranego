@@ -8,6 +8,8 @@ struct BasicBlock <: Block
     stride::Integer
 end
 
+Flux.@functor BasicBlock
+
 function BasicBlock(channels::Pair{T, T}, stride::Integer, connection::Function) where {T <: Integer}
     before_connection = Chain(
         Conv((3, 3), channels, stride, pad = 1, bias = false),
@@ -20,5 +22,3 @@ function BasicBlock(channels::Pair{T, T}, stride::Integer, connection::Function)
 end
 
 (bb::BasicBlock)(x) = bb.chain(x)
-
-Flux.@functor BasicBlock

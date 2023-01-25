@@ -6,6 +6,8 @@ struct RN
     head::Chain
 end
 
+Flux.@functor RN
+
 function RN(channels::Vector, strides::Vector, repeats::Vector, classes::Integer; pooling_dims = (7, 7))
     length(channels) - length(strides) == 2 || throw(DomainError(length(channels) - length(strides), "The number of channels must be 2 more than the number of strides"))
     length(strides) == length(repeats) || throw(DomainError(length(strides) - length(repeats), "The number of strides must be the same as the number of repeats"))
@@ -36,5 +38,3 @@ function RN(channels::Vector, strides::Vector, repeats::Vector, classes::Integer
 end
 
 (rn::RN)(x) = rn.head(apply_layers(rn.layers, rn.entry(x)))
-
-Flux.@functor RN

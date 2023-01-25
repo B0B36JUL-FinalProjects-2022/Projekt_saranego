@@ -2,6 +2,8 @@ struct Layer
     blocks::Chain
 end
 
+Flux.@functor Layer
+
 function Layer(block, channels, stride, repeat)
     blocks = []
 
@@ -23,5 +25,3 @@ function Layer(block, channels, stride, repeat)
 end
 
 (l::Layer)(x) = apply_layers(l.blocks, x)
-
-Flux.@functor Layer
