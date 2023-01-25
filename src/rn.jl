@@ -2,7 +2,7 @@ export RN
 
 struct RN
     entry::Chain
-    layers::Vector{Layer}
+    layers::Chain
     head::Chain
 end
 
@@ -12,7 +12,7 @@ function RN(channels::Vector, strides::Vector, repeats::Vector, classes::Integer
 
     entry = Chain(
         Conv((3, 3), channels[1] => channels[2], pad = 1, bias = false),
-        BatchNorm(8, relu)
+        BatchNorm(channels[2], relu)
     )
 
     layers = []
@@ -28,7 +28,7 @@ function RN(channels::Vector, strides::Vector, repeats::Vector, classes::Integer
         AdaptiveMeanPool((7, 7)),
         Flux.flatten,
         Dense(7 * 7 * channels[end] => classes, bias = false),
-        BatchNorm(classes, relu),
+        BatchNorm(classes),
         logsoftmax
     )
 
