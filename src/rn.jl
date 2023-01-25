@@ -37,7 +37,7 @@ function RN(channels::Vector, strides::Vector, repeats::Vector, classes::Integer
     RN(entry, layers, head)
 end
 
-(rn::RN)(x) = rn.head(apply_layers(rn.layers, rn.entry(x)))
+(rn::RN)(x) = rn.head(rn.layers(rn.entry(x)))
 
 function Base.show(io::IO, rn::RN)
     n_layers = length(rn.entry) + length(rn.layers) + length(rn.head)

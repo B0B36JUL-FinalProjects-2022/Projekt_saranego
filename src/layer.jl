@@ -1,3 +1,5 @@
+export Layer
+
 struct Layer
     blocks::Chain
 end
@@ -11,7 +13,7 @@ function Layer(block, channels, stride, repeat)
         push!(blocks, block(channels, +, stride))
     else
         downsample = Chain(
-            Conv((1, 1), channels, stride, bias = false),
+            Conv((1, 1), channels; stride, bias = false),
             BatchNorm(channels[2])
         )
         push!(blocks, block(channels, stride, (x_out, x_in) -> x_out + downsample(x_in)))
@@ -24,4 +26,4 @@ function Layer(block, channels, stride, repeat)
     Layer(Chain(blocks...))
 end
 
-(l::Layer)(x) = apply_layers(l.blocks, x)
+(l::Layer)(x) = l.blocks(x)
