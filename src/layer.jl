@@ -1,5 +1,5 @@
 struct Layer
-    blocks::Vector{Block}
+    blocks::Chain
 end
 
 function Layer(block, channels, stride, repeat)
