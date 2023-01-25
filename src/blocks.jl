@@ -22,3 +22,5 @@ function BasicBlock(channels::Pair{T, T}, stride::Integer, connection::Function)
 end
 
 (bb::BasicBlock)(x) = bb.chain(x)
+
+Base.show(io::IO, bb::BasicBlock) = print(io, typeof(bb), "(", bb.channels[1], " => ", bb.channels[2], ", ", bb.stride, ")")

@@ -38,3 +38,29 @@ function RN(channels::Vector, strides::Vector, repeats::Vector, classes::Integer
 end
 
 (rn::RN)(x) = rn.head(apply_layers(rn.layers, rn.entry(x)))
+
+function Base.show(io::IO, rn::RN)
+    n_layers = length(rn.entry) + length(rn.layers) + length(rn.head)
+    println("ResNet with ", n_layers, " layers and ", number_of_params(rn), " parameters\n")
+    
+    println("EntryLayer")
+    for layer in rn.entry
+        print(" " ^ 4)
+        println(layer)
+    end
+
+    for (i, layer) in enumerate(rn.layers)
+        println("ResidualLayer", i)
+
+        for block in layer.blocks
+            print(" " ^ 4)
+            println(block)
+        end
+    end
+
+    println("HeadLayer")
+    for layer in rn.head
+        print(" " ^ 4)
+        println(layer)
+    end
+end
