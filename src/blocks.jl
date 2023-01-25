@@ -2,13 +2,13 @@ export Block, BasicBlock
 
 abstract type Block end
 
-struct BasicBlock
+struct BasicBlock <: Block
     chain::Chain
     channels::Pair{Integer, Integer}
     stride::Integer
 end
 
-function BasicBlock(channels, stride, connection)
+function BasicBlock(channels::Pair{T, T}, stride::Integer, connection::Function) where {T <: Integer}
     before_connection = Chain(
         Conv((3, 3), channels, stride, pad = 1, bias = false),
         BatchNorm(channels[2], relu),
