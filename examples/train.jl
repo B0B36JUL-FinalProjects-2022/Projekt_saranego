@@ -1,3 +1,4 @@
+using Flux
 using Flux: onehotbatch
 
 accuracy(y_out, y) = sum(argmax.(eachcol(y_out)) .== y) / length(y)
