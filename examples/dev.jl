@@ -1,6 +1,5 @@
 using MLDatasets
 using Random
-using Flux
 using Flux: unsqueeze
 using Plots
 
@@ -28,9 +27,16 @@ val_y = test_y[val_indices]
 test_x = selectdim(test_x, 4, test_indices)
 test_y = test_y[test_indices]
 
-rn = RN([1, 4, 4, 4], [2, 2], [1, 1], 10)
+rn = RN(
+    block = BasicBlock,
+    channels = [4, 4, 4], 
+    strides = [2, 2], 
+    repeats = [1, 1], 
+    grayscale = true,
+    classes = 10
+)
 
-epochs = 10
+epochs = 1
 (train_losses, train_accs), (val_losses, val_accs) = train!(
     rn, 
     (train_x, train_y), 
@@ -39,18 +45,4 @@ epochs = 10
     epochs
 )
 
-plot([train_losses, val_losses];
-    title = "Loss during training",
-    label = ["Training set" "Validation set"],
-    xguide = "Epoch",
-    yguide = "Loss",
-    xticks = 1:epochs,
-)
-
-plot([train_accs, val_accs];
-    title = "Accuracy during training",
-    label = ["Training set" "Validation set"],
-    xguide = "Epoch",
-    yguide = "Accuracy",
-    xticks = 1:epochs,
-)
+test_acc = accuracy(rn(test_x), test_y)

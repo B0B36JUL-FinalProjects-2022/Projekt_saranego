@@ -14,21 +14,22 @@ function RN(;
         strides::Vector, 
         repeats::Vector, 
         classes::Integer, 
+        grayscale = false,
         pooling_dims = (7, 7)
     )
 
-    length(channels) - length(strides) == 2 || throw(DomainError(length(channels) - length(strides), "The number of channels must be 2 more than the number of strides"))
+    length(channels) - length(strides) == 1 || throw(DomainError(length(channels) - length(strides), "The number of channels must be 1 more than the number of strides"))
     length(strides) == length(repeats) || throw(DomainError(length(strides) - length(repeats), "The number of strides must be the same as the number of repeats"))
 
     entry = Chain(
-        Conv((3, 3), channels[1] => channels[2], pad = 1, bias = false),
-        BatchNorm(channels[2], relu)
+        Conv((3, 3), (grayscale ? 1 : 3) => channels[1], pad = 1, bias = false),
+        BatchNorm(channels[1], relu)
     )
 
     layers = []
-    in_channels = channels[2]
+    in_channels = channels[1]
     
-    for (out_channels, stride, repeat) in zip(channels[3:end], strides, repeats)
+    for (out_channels, stride, repeat) in zip(channels[2:end], strides, repeats)
         push!(layers, Layer(BasicBlock, in_channels => out_channels, stride, repeat))
         in_channels = out_channels
     end
