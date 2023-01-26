@@ -8,6 +8,7 @@ using ResNet
 
 Random.seed!(0)
 
+include("utils.jl")
 include("train.jl")
 
 train_x, train_y = FashionMNIST(; Tx=Float32, split=:train)[1:5000]
@@ -36,13 +37,20 @@ rn = RN(
     classes = 10
 )
 
+rn_path = "examples/rn.bson"
 epochs = 1
-(train_losses, train_accs), (val_losses, val_accs) = train!(
-    rn, 
-    (train_x, train_y), 
-    (val_x, val_y), 
-    0.01,
-    epochs
-)
+loaded = load_if_exists!(rn, rn_path)
+
+if !loaded
+    train!(
+        rn, 
+        (train_x, train_y), 
+        (val_x, val_y), 
+        0.01,
+        epochs
+    )
+end
+
+save(rn, rn_path)
 
 test_acc = accuracy(rn(test_x), test_y)
