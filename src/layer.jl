@@ -1,5 +1,3 @@
-export Layer
-
 struct Layer
     blocks::Chain
 end
