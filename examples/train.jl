@@ -17,9 +17,13 @@ function train!(model, train_tuple, val_tuple, η = 0.01, epochs = 1, batch_size
     val_losses, val_accs = Float32[], Float32[]
 
     for _ in 1:epochs
+        Flux.trainmode!(model)
+
         Flux.train!(model, loader, opt_state) do m, x, y
             loss_fun(m(x), y)
         end
+
+        Flux.testmode!(model)
 
         train_out = rn(train_x)
         val_out = rn(val_x)
