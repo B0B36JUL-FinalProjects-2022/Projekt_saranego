@@ -48,9 +48,6 @@ function RN(;
     RN(entry, layers, head)
 end
 
-RN(::BasicBlock, args...; kwargs...) = RN(BasicBlock, args...; kwargs...)
-RN(::Bottleneck, args...; kwargs...) = RN(Bottleneck, args...; kwargs...)
-
 (rn::RN)(x) = rn.head(rn.layers(rn.entry(x)))
 
 function Base.show(io::IO, rn::RN)
