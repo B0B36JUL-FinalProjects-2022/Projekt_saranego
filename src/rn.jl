@@ -15,7 +15,8 @@ function RN(;
         repeats::Vector, 
         classes::Integer, 
         grayscale = false,
-        pooling_dims = (7, 7)
+        pooling_dims = (7, 7),
+        kwargs...
     )
 
     length(channels) - length(strides) == 1 || throw(DomainError(length(channels) - length(strides), "The number of channels must be 1 more than the number of strides"))
@@ -28,23 +29,27 @@ function RN(;
 
     layers = []
     in_channels = channels[1]
+    expansion = get(Dict(kwargs), :expansion, 1)
     
     for (out_channels, stride, repeat) in zip(channels[2:end], strides, repeats)
-        push!(layers, Layer(BasicBlock, in_channels => out_channels, stride, repeat))
-        in_channels = out_channels
+        push!(layers, Layer(block, in_channels => out_channels, stride, repeat; kwargs...))
+        in_channels = out_channels * expansion
     end
     layers = Chain(layers...)
 
     head = Chain(
         AdaptiveMeanPool(pooling_dims),
         Flux.flatten,
-        Dense(prod(pooling_dims) * channels[end] => classes, bias = false),
+        Dense(prod(pooling_dims) * channels[end] * expansion => classes, bias = false),
         BatchNorm(classes),
         logsoftmax
     )
 
     RN(entry, layers, head)
 end
+
+RN(::BasicBlock, args...; kwargs...) = RN(BasicBlock, args...; kwargs...)
+RN(::Bottleneck, args...; kwargs...) = RN(Bottleneck, args...; kwargs...)
 
 (rn::RN)(x) = rn.head(rn.layers(rn.entry(x)))
 

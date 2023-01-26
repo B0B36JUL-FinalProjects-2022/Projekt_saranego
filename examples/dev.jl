@@ -29,12 +29,13 @@ test_x = selectdim(test_x, 4, test_indices)
 test_y = test_y[test_indices]
 
 rn = RN(
-    block = BasicBlock,
-    channels = [4, 4, 4], 
+    block = Bottleneck,
+    channels = [2, 4, 8], 
     strides = [2, 2], 
-    repeats = [1, 1], 
+    repeats = [2, 2], 
     grayscale = true,
-    classes = 10
+    classes = 10,
+    expansion = 4
 )
 
 rn_path = "examples/rn.bson"
