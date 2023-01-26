@@ -50,26 +50,26 @@ end
 
 function Base.show(io::IO, rn::RN)
     n_layers = length(rn.entry) + length(rn.layers) + length(rn.head)
-    println("ResNet with ", n_layers, " layers and ", number_of_params(rn), " parameters\n")
+    println(io, "ResNet with ", n_layers, " layers and ", number_of_params(rn), " parameters\n")
     
-    println("Entry")
+    println(io, "Entry")
     for layer in rn.entry
-        print(" " ^ 4)
-        println(layer)
+        print(io, " " ^ 4)
+        println(io, layer)
     end
 
     for (i, layer) in enumerate(rn.layers)
-        println("Layer", i)
+        println(io, "Layer", i)
 
         for block in layer.blocks
-            print(" " ^ 4)
-            println(block)
+            print(io, " " ^ 4)
+            println(io, block)
         end
     end
 
-    println("Head")
+    println(io, "Head")
     for layer in rn.head
-        print(" " ^ 4)
-        println(layer)
+        print(io, " " ^ 4)
+        println(io, layer)
     end
 end
