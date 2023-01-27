@@ -5,7 +5,7 @@ Implementation of residual network.
 ## Usage
 
 To create your own residual network use the constructor `RN()`.
-The returned model is a Flux functor, so you can train it with your own `Flux` training loop.
+The returned model is a `Flux` functor, so you can train it with your own `Flux` training loop.
 Available blocks are defined in the `blocks.jl`.
 For detailed information read the documentation of the constructor.
 
