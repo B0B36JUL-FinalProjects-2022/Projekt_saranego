@@ -1,9 +1,10 @@
 using Flux
 using Flux: onehotbatch
+using Dates
 
 accuracy(y_out, y) = sum(argmax.(eachcol(y_out)) .== y) / length(y)
 
-function train!(model, train_tuple, val_tuple, η = 0.01, epochs = 1, batch_size = 128)
+function train!(model, train_tuple, val_tuple, η = 0.01, epochs = 1, batch_size = 128; verbose = false)
     train_x, train_y = train_tuple
     val_x, val_y = val_tuple
     train_y_oh = onehotbatch(train_y, 0:9)
@@ -16,7 +17,9 @@ function train!(model, train_tuple, val_tuple, η = 0.01, epochs = 1, batch_size
     train_losses, train_accs = Float32[], Float32[]
     val_losses, val_accs = Float32[], Float32[]
 
-    for _ in 1:epochs
+    for epoch in 1:epochs
+        !verbose || println(now(), ": Running epoch ", epoch, "...")
+
         Flux.trainmode!(model)
 
         Flux.train!(model, loader, opt_state) do m, x, y

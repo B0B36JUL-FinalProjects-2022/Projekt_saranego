@@ -29,28 +29,26 @@ test_x = selectdim(test_x, 4, test_indices)
 test_y = test_y[test_indices]
 
 rn = RN(
-    block = Bottleneck,
-    channels = [2, 4, 8], 
+    block = BasicBlock,
+    channels = [1, 8, 16], 
     strides = [2, 2], 
-    repeats = [2, 2], 
+    repeats = [1, 1], 
     grayscale = true,
-    classes = 10,
-    expansion = 4
+    classes = 10
 )
 
 rn_path = "examples/rn.bson"
-epochs = 1
-loaded = load_if_exists!(rn, rn_path)
+epochs = 3
+load_if_exists!(rn, rn_path)
 
-if !loaded
-    train!(
-        rn, 
-        (train_x, train_y), 
-        (val_x, val_y), 
-        0.01,
-        epochs
-    )
-end
+train!(
+    rn, 
+    (train_x, train_y), 
+    (val_x, val_y), 
+    0.01,
+    epochs,
+    verbose = true
+)
 
 save(rn, rn_path)
 
