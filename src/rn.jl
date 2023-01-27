@@ -34,7 +34,7 @@ Other arguments are self explanatory.
 # Example
 
 ```julia-repl
-julia> rn = RN(
+julia> RN(
     block = BasicBlock,
     channels = [2, 4, 8], 
     strides = [2, 2], 
@@ -60,7 +60,7 @@ Head
     BatchNorm(10)
     logsoftmax
 
-julia> rn = RN(
+julia> RN(
     block = Bottleneck,
     channels = [32, 64, 128, 256], 
     strides = [1, 2, 2], 
@@ -130,7 +130,7 @@ function RN(;
     head = Chain(
         AdaptiveMeanPool(pooling_dims),
         Flux.flatten,
-        Dense(prod(pooling_dims) * channels[end] * expansion => classes, bias = false),
+        Dense(prod(pooling_dims)     * channels[end] * expansion => classes, bias = false),
         BatchNorm(classes),
         logsoftmax
     )
