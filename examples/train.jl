@@ -2,7 +2,7 @@ using Flux
 using Flux: onehotbatch
 using Dates
 
-accuracy(y_out, y) = sum(argmax.(eachcol(y_out)) .== y) / length(y)
+accuracy(y_out, y) = sum((argmax.(eachcol(y_out)) .- 1) .== y) / length(y)
 
 function train!(model, train_tuple, val_tuple, η = 0.01, epochs = 1, batch_size = 128; verbose = false)
     train_x, train_y = train_tuple
