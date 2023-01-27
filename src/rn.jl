@@ -105,7 +105,7 @@ function RN(;
         repeats::Vector, 
         classes::Integer, 
         grayscale = false,
-        pooling_dims = (7, 7),
+        pooling_dims = (1, 1),
         kwargs...
     )
 
