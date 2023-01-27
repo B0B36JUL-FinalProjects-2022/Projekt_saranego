@@ -42,7 +42,7 @@ julia> RN(
     grayscale = true,
     classes = 10
 )
-ResNet with 8 layers and 6578 parameters
+ResNet with 10 layers and 2738 parameters
 
 Entry
     Conv((3, 3), 1 => 2, pad=1, bias=false)
@@ -54,9 +54,9 @@ Layer2
     BasicBlock(4 => 8, stride=2)
     BasicBlock(8 => 8, stride=1)
 Head
-    AdaptiveMeanPool((7, 7))
+    AdaptiveMeanPool((1, 1))
     flatten
-    Dense(392 => 10; bias=false)
+    Dense(8 => 10; bias=false)
     BatchNorm(10)
     logsoftmax
 
@@ -67,10 +67,9 @@ julia> RN(
     repeats = [4, 4, 4], 
     grayscale = false,
     classes = 20,
-    pooling_dims = (5, 5),
     expansion = 4
 )
-ResNet with 38 layers and 6205384 parameters
+ResNet with 38 layers and 5713864 parameters
 
 Entry
     Conv((3, 3), 3 => 32, pad=1, bias=false)
@@ -91,9 +90,9 @@ Layer3
     Bottleneck(1024 => 256, stride=1, expansion=4)
     Bottleneck(1024 => 256, stride=1, expansion=4)
 Head
-    AdaptiveMeanPool((5, 5))
+    AdaptiveMeanPool((1, 1))
     flatten
-    Dense(25600 => 20; bias=false)
+    Dense(1024 => 20; bias=false)
     BatchNorm(20)
     logsoftmax
 ```
@@ -105,7 +104,6 @@ function RN(;
         repeats::Vector, 
         classes::Integer, 
         grayscale = false,
-        pooling_dims = (1, 1),
         kwargs...
     )
 
@@ -128,9 +126,9 @@ function RN(;
     layers = Chain(layers...)
 
     head = Chain(
-        AdaptiveMeanPool(pooling_dims),
+        AdaptiveMeanPool((1, 1)),
         Flux.flatten,
-        Dense(prod(pooling_dims)     * channels[end] * expansion => classes, bias = false),
+        Dense(channels[end] * expansion => classes, bias = false),
         BatchNorm(classes),
         logsoftmax
     )
